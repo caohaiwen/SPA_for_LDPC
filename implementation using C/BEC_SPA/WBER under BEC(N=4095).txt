@@ -1,0 +1,6 @@
+max_iterations = 30, erasure_prob == 0.020000, word error rate == 0.000000
+max_iterations = 30, erasure_prob == 0.020000, bit error rate == 0.000000
+max_iterations = 30, erasure_prob == 0.040000, word error rate == 0.000000
+max_iterations = 30, erasure_prob == 0.040000, bit error rate == 0.000000
+max_iterations = 30, erasure_prob == 0.060000, word error rate == 0.000000
+max_iterations = 30, erasure_prob == 0.060000, bit error rate == 0.000000

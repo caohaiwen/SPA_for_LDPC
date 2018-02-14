@@ -1,0 +1,48 @@
+# depslib dependency file v1.0
+1518440095 source:c:\users\hiter\desktop\some implementations using c\awgn_spa\main.c
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+	<string.h>
+	<math.h>
+	<time.h>
+	"SPA.h"
+	"ConvertHtoG.h"
+	"ReadOutH.h"
+	"Htrsf.h"
+	"Gaussian.h"
+
+1518194329 c:\users\hiter\documents\some implementations using c\ldpc-related lib\spa.h
+
+1518191369 c:\users\hiter\documents\some implementations using c\ldpc-related lib\converthtog.h
+
+1518172021 c:\users\hiter\documents\some implementations using c\ldpc-related lib\readouth.h
+	<stdio.h>
+
+1518237828 c:\users\hiter\documents\some implementations using c\ldpc-related lib\htrsf.h
+
+1518337861 c:\users\hiter\documents\some implementations using c\ldpc-related lib\gaussian.h
+	<stdlib.h>
+	<math.h>
+
+1518333113 source:c:\users\hiter\documents\some implementations using c\ldpc-related lib\converthtog.c
+	"ConvertHtoG.h"
+	"Htrsf.h"
+	<stdlib.h>
+	<stdio.h>
+
+1518333152 source:c:\users\hiter\documents\some implementations using c\ldpc-related lib\htrsf.c
+	"Htrsf.h"
+	<stdlib.h>
+	<stdio.h>
+
+1518253682 source:c:\users\hiter\documents\some implementations using c\ldpc-related lib\readouth.c
+	<stdio.h>
+	<stdlib.h>
+	"ReadOutH.h"
+
+1518280766 source:c:\users\hiter\documents\some implementations using c\ldpc-related lib\spa.c
+	"SPA.h"
+	<stdlib.h>
+	<math.h>
+

@@ -1,0 +1,16 @@
+cross_prob == 0.020000, word error rate == 0.002290
+cross_prob == 0.020000, bit error rate == 0.000895
+cross_prob == 0.040000, word error rate == 0.017120
+cross_prob == 0.040000, bit error rate == 0.006717
+cross_prob == 0.060000, word error rate == 0.137560
+cross_prob == 0.060000, bit error rate == 0.065104
+cross_prob == 0.080000, word error rate == 0.468700
+cross_prob == 0.080000, bit error rate == 0.230813
+cross_prob == 0.100000, word error rate == 0.811220
+cross_prob == 0.100000, bit error rate == 0.403893
+cross_prob == 0.120000, word error rate == 0.966390
+cross_prob == 0.120000, bit error rate == 0.482862
+cross_prob == 0.140000, word error rate == 0.997320
+cross_prob == 0.140000, bit error rate == 0.498570
+cross_prob == 0.160000, word error rate == 0.999910
+cross_prob == 0.160000, bit error rate == 0.499976
