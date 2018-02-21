@@ -11,6 +11,9 @@
 #include "Htrsf.h"
 #include "Gaussian.h"
 
+
+// tanh(17.0) = 0.9999999999999966 (%.16lf) under "double" whose precision is about 15~16 decimal digits.
+
 int main()
 {
     FILE *fp = NULL, *WBER = NULL;
@@ -19,10 +22,10 @@ int main()
     int i = 0, j = 0 , l = 0;
     char *H = NULL, *G = NULL;
     int k = 0;
-    float SNR_b = 0, noise_var = 0, noise = 0, R = 0;
+    double SNR_b = 0, noise_var = 0, noise = 0, R = 0;
     char *u = NULL;
     char *x_s = NULL;
-    float *cm_int = NULL, *y_r = NULL, *x_ss = NULL;
+    double *cm_int = NULL, *y_r = NULL, *x_ss = NULL;
     int sum = 0, num = 0, failure = 0, trial = 0;
     char *decoded_x = NULL;
     char convergence = 1;
@@ -54,12 +57,12 @@ int main()
 
     ConvertHtoG(H, n, m, &G, &k);
 
-    R = (float)k / m;
+    R = (double)k / m;
     u = (char *)calloc(k, sizeof(char));
     x_s = (char *)calloc(m, sizeof(char));
-    y_r = (float *)calloc(m, sizeof(float));
-    x_ss = (float *)calloc(m, sizeof(float));
-    cm_int = (float *)calloc(m, sizeof(float));
+    y_r = (double *)calloc(m, sizeof(double));
+    x_ss = (double *)calloc(m, sizeof(double));
+    cm_int = (double *)calloc(m, sizeof(double));
 
     total_trial = 100000;
     num = 0;
@@ -127,10 +130,8 @@ int main()
             }
 
         }
-        fprintf(WBER, "SNR_b == %f dB, word error rate == %f\n",  SNR_b, (float)failure / total_trial);
-        fprintf(WBER, "SNR_b == %f dB, bit error rate == %f\n",  SNR_b, (float)error_bits / (total_trial*m));
-        if (abs(failure - total_trial) <= total_trial*0.001)
-            break;
+        fprintf(WBER, "SNR_b == %lf dB, word error rate == %.16lf\n",  SNR_b, (double)failure / total_trial);
+        fprintf(WBER, "SNR_b == %lf dB, bit error rate == %.16lf\n",  SNR_b, (double)error_bits / (total_trial*m));
     }
 
     fclose(WBER);

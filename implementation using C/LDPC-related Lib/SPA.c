@@ -12,18 +12,16 @@ input : cm_int: the intrinsic information from the channel model;
 output : whether it can convergent to a codeword within the max_iterations.
 */
 
-char SPA(float *cm_int, int n, int m, int row_w, int col_w, int *variable, int *check, int max_iterations, char **decoded_x)
+char SPA(double *cm_int, int n, int m, int row_w, int col_w, int *variable, int *check, int max_iterations, char **decoded_x)
 {
-    float *llr_rl = (float *)calloc(n*m, sizeof(float)) ;
-    float *llr_lr = (float *)calloc(n*m, sizeof(float)) ;
+    double *llr_rl = (double *)calloc(n*m, sizeof(double)) ;
+    double *llr_lr = (double *)calloc(n*m, sizeof(double)) ;
     int degree_variable = col_w, degree_check = row_w;
-    float *beliefs = (float *)calloc(m, sizeof(float)) ;
+    double *beliefs = (double *)calloc(m, sizeof(double)) ;
     char flag = 1;
     int its = 0, col = 0, row = 0, i = 0,checkN = 0, variableN = 0, t = 0, next_checkN = 0, next_variableN = 0, sum = 0;
+    double tanhVaule = 0, value = 0;
 
-//printf("SPA------%f\n", *(cm_int + 1) );
-//printf("SPA----------1\n");
-//printf("row_w======%d, col_w======%d\n",row_w, col_w );
     for (its = 0; its < max_iterations; its++)
     {
         flag  = 1;
@@ -32,19 +30,17 @@ char SPA(float *cm_int, int n, int m, int row_w, int col_w, int *variable, int *
             for (i = 0; i < degree_variable; i++)
             {
                 checkN = *(variable + (col*degree_variable + i)) - 1;    //the i-th check node of the col-th variable node
-                // printf("checkN=====%d\n", checkN);
+                
             /* compute the message from variable node col to its i-th check node. */
                 *(llr_lr + (m*checkN + col)) = *(cm_int + col) ;
                 for (t = i+1; t < i + degree_variable ; t++ )
                 {
                     next_checkN = *(variable + (col*degree_variable + t % degree_variable)) - 1;
-              //      printf("next_checkN======%d\n", next_checkN);
                     *(llr_lr + (m*checkN + col)) += *(llr_rl + (m*next_checkN + col));
                 }
 
             }
 
-//printf("SPA----------2\n");
 
     /* messages pass from right(check nodes) to left(variable nodes) */
         for (row = 0; row < n; row++)   //enumerating the check nodes one by one
@@ -52,16 +48,27 @@ char SPA(float *cm_int, int n, int m, int row_w, int col_w, int *variable, int *
             {
                 variableN = *(check + (row*degree_check + i)) - 1;
             /* compute the message from the check node row to its i-th variable node. */
-                *(llr_rl + (row*m +variableN)) = 1;
+                tanhVaule = 1;
                 for (t = i+1; t < i + degree_check; t++)
                 {
                     next_variableN = *(check + (row*degree_check + t % degree_check)) - 1;
-                    *(llr_rl + (row*m +variableN)) *= tanh(*(llr_lr + (row*m + next_variableN)) / 2);
+                    vaule = *(llr_lr + (row*m + next_variableN)) / 2 ; 
+                    if (abs(vaule) < 17.0)               //otherwise, tanh(tanhVaule) = +1/-1
+                        tanhVaule *= tanh(vaule);
+                    else if (vaule < -17.0)             
+                        tanhVaule = -tanhVaule;
                 }
-                *(llr_rl + (row*m +variableN)) = 2 * atanh(*(llr_rl + (row*m +variableN)));
+                
+                if (abs(tanhVaule - 1.0) <= 1e-10)
+                    value = 17.0;
+                else if (abs(tanhVaule - (-1.0)) <= 1e-10)
+                    value = -17.0;
+                else 
+                    value = atanh(tanhVaule);
+
+                *(llr_rl + (row*m +variableN)) = 2 * value;
             }
 
-//printf("SPA----------3\n");
     /* compute the current beliefs in each variable node */
         for (col = 0; col < m; col++)
         {
