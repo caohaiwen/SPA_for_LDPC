@@ -34,7 +34,7 @@ int main()
     int E_b = 1;
 
 
-    fp = fopen("PCMatrix(N=204,K=102,M=102,R=0.5).txt", "r");
+    fp = fopen("PCMatrix(816.3.174 (N=816,K=408,M=408,R=0.5)).txt", "r");
 
     if (fp == NULL)
     {
@@ -57,6 +57,8 @@ int main()
 
     ConvertHtoG(H, n, m, &G, &k);
 
+    free(H);
+
     R = (double)k / m;
     u = (char *)calloc(k, sizeof(char));
     x_s = (char *)calloc(m, sizeof(char));
@@ -68,7 +70,7 @@ int main()
     num = 0;
     decoded_x = (char *)calloc(m, sizeof(char));
 
-    WBER = fopen("WBER under AWGN Channel.txt", "w");
+    WBER = fopen("WBER under AWGN Channel(N = 816).txt", "w");
 
     if (WBER == NULL)
     {
@@ -89,7 +91,7 @@ int main()
             for (j = 0; j < k; j++) //randomly generating information bits
                 *(u + j) = rand() % 2;
 
-            for (j = 0; j < m; j++) // encoding----->u*G & distorted by bsc
+            for (j = 0; j < m; j++) // encoding----->u*G & distorted by AWGN Channel
             {
                 sum = 0;
                 for (l = 0; l < k; l++)
@@ -130,8 +132,8 @@ int main()
             }
 
         }
-        fprintf(WBER, "SNR_b == %lf dB, word error rate == %.16lf\n",  SNR_b, (double)failure / total_trial);
-        fprintf(WBER, "SNR_b == %lf dB, bit error rate == %.16lf\n",  SNR_b, (double)error_bits / (total_trial*m));
+        fprintf(WBER, "%lf %lf\n",  SNR_b, (double)failure / total_trial);
+        fprintf(WBER, "%lf %lf\n",  SNR_b, (double)error_bits / (total_trial*m));
     }
 
     fclose(WBER);
@@ -143,7 +145,6 @@ int main()
     free(x_s);
     free(y_r);
     free(G);
-    free(H);
     free(variable);
     free(check);
 

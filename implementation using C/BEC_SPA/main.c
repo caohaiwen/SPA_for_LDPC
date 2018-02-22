@@ -10,7 +10,7 @@
 #include "ReadOutH.h"
 #include "Htrsf.h"
 
-int main()
+int main(int argc, char *argv[])  //using windows command to pass parameters about input file name and output file name
 {
     FILE *fp = NULL, *WBER = NULL;
     int n = 0, m = 0, row_w = 0, col_w = 0;
@@ -27,7 +27,7 @@ int main()
     int total_trial = 0, max_iterations = 100, error_bits = 0, hd = 0;
     time_t t;
 
-    fp = fopen("PCMatrix(816.3.174 (N=816,K=408,M=408,R=0.5)).txt", "r");
+    fp = fopen(argv[1], "r");
 
     if (fp == NULL)
     {
@@ -59,7 +59,7 @@ int main()
 
     decoded_x = (char *)calloc(m, sizeof(char));
 
-    WBER = fopen("WBER under BEC(N=816,its=180).txt", "w");
+    WBER = fopen(argv[2], "w");
 
     if (WBER == NULL)
     {

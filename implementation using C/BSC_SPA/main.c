@@ -18,17 +18,17 @@ int main()
     int i = 0, j = 0 , l = 0;
     char *H = NULL, *G = NULL;
     int k = 0;
-    float cross_prob = 0, p = 0;
+    double cross_prob = 0, p = 0;
     char *u = NULL;
     char *x_s = NULL, *y_r = NULL;
-    float *cm_int = NULL;
+    double *cm_int = NULL;
     int sum = 0, num = 0, failure = 0, trial = 0;
     char *decoded_x = NULL;
     char convergence = 1;
     int total_trial = 0, max_iterations = 100, error_bits = 0, hd = 0;
     time_t t;
 
-    fp = fopen("PCMatrix(4095.738.4.102 (N=4095,K=3357,M=738,R= 0.82)).txt", "r");
+    fp = fopen("PCMatrix(816.3.174 (N=816,K=408,M=408,R=0.5)).txt", "r");
 
     if (fp == NULL)
     {
@@ -52,17 +52,19 @@ int main()
 
     ConvertHtoG(H, n, m, &G, &k);
 
+    free(H);
+
     u = (char *)calloc(k, sizeof(char));
     x_s = (char *)calloc(m, sizeof(char));
     y_r = (char *)calloc(m, sizeof(char));
-    cm_int = (float *)calloc(m, sizeof(float));
+    cm_int = (double *)calloc(m, sizeof(double));
 
     total_trial = 10000;
     num = 0;
 
     decoded_x = (char *)calloc(m, sizeof(char));
 
-    WBER = fopen("WBER under BSC(N=4095).txt", "w");
+    WBER = fopen("WBER under BSC(N=816).txt", "w");
 
     if (WBER == NULL)
     {
@@ -70,7 +72,7 @@ int main()
         return 0;
     }
 
-    for (i = 1; i < 20; i++)
+    for (i = 1; i <= 25; i++)
     {
         cross_prob = i*0.02;
         failure = 0;
@@ -87,7 +89,7 @@ int main()
             for (j = 0; j < m; j++) // encoding----->u*G & distorted by bsc
             {
                 sum = 0;
-                p = ((float)(rand())) / RAND_MAX;
+                p = ((double)(rand())) / RAND_MAX;
                 for (l = 0; l < k; l++)
                     sum += ((*(u + l)) * (*(G + (l*m + j))));
                 *(x_s + j) = sum % 2;
@@ -127,15 +129,10 @@ int main()
                     error_bits += hd;
                 }
             }
-
-//            memset(cm_int, 0, m*sizeof(float));
-//            memset(decoded_x, 0, m*sizeof(char));
         }
 
-        fprintf(WBER, "cross_prob == %f, word error rate == %f\n",  cross_prob, (float)failure / total_trial);
-        fprintf(WBER, "cross_prob == %f, bit error rate == %f\n",  cross_prob, (float)error_bits / (total_trial*m));
-        if (abs(failure - total_trial) <= total_trial*0.001)
-            break;
+        fprintf(WBER, "%lf, %lf\n",  cross_prob, (double)failure / total_trial);
+        fprintf(WBER, "%lf, %lf\n",  cross_prob, (double)error_bits / (total_trial*m));
     }
     fclose(WBER);
 
@@ -145,7 +142,6 @@ int main()
     free(x_s);
     free(y_r);
     free(G);
-    free(H);
     free(variable);
     free(check);
 

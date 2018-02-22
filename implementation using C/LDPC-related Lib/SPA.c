@@ -15,7 +15,7 @@ output : whether it can convergent to a codeword within the max_iterations.
 char SPA(double *cm_int, int n, int m, int row_w, int col_w, int *variable, int *check, int max_iterations, char **decoded_x)
 {
     double *llr_rl = (double *)calloc(n*m, sizeof(double)) ;
-    double *llr_lr = (double *)calloc(n*m, sizeof(double)) ;
+    double *llr_lr = (double *)calloc(m*n, sizeof(double)) ;
     int degree_variable = col_w, degree_check = row_w;
     double *beliefs = (double *)calloc(m, sizeof(double)) ;
     char flag = 1;
@@ -30,14 +30,19 @@ char SPA(double *cm_int, int n, int m, int row_w, int col_w, int *variable, int 
             for (i = 0; i < degree_variable; i++)
             {
                 checkN = *(variable + (col*degree_variable + i)) - 1;    //the i-th check node of the col-th variable node
-                
+
             /* compute the message from variable node col to its i-th check node. */
                 *(llr_lr + (m*checkN + col)) = *(cm_int + col) ;
+
+            //    *(llr_lr + (col*degree_variable + i)) = *(cm_int + col) ;
+
                 for (t = i+1; t < i + degree_variable ; t++ )
                 {
                     next_checkN = *(variable + (col*degree_variable + t % degree_variable)) - 1;
                     *(llr_lr + (m*checkN + col)) += *(llr_rl + (m*next_checkN + col));
+
                 }
+
 
             }
 
@@ -52,18 +57,18 @@ char SPA(double *cm_int, int n, int m, int row_w, int col_w, int *variable, int 
                 for (t = i+1; t < i + degree_check; t++)
                 {
                     next_variableN = *(check + (row*degree_check + t % degree_check)) - 1;
-                    vaule = *(llr_lr + (row*m + next_variableN)) / 2 ; 
-                    if (abs(vaule) < 17.0)               //otherwise, tanh(tanhVaule) = +1/-1
-                        tanhVaule *= tanh(vaule);
-                    else if (vaule < -17.0)             
+                    value = *(llr_lr + (row*m + next_variableN)) / 2 ;
+                    if (abs(value) < 17.0)               //otherwise, tanh(tanhVaule) = +1/-1
+                        tanhVaule *= tanh(value);
+                    else if (value < -17.0)
                         tanhVaule = -tanhVaule;
                 }
-                
+
                 if (abs(tanhVaule - 1.0) <= 1e-10)
                     value = 17.0;
                 else if (abs(tanhVaule - (-1.0)) <= 1e-10)
                     value = -17.0;
-                else 
+                else
                     value = atanh(tanhVaule);
 
                 *(llr_rl + (row*m +variableN)) = 2 * value;

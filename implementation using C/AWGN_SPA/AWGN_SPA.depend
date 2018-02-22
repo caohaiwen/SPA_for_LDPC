@@ -46,3 +46,50 @@
 	<stdlib.h>
 	<math.h>
 
+1518578873 source:c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\converthtog.c
+	"ConvertHtoG.h"
+	"Htrsf.h"
+	<stdlib.h>
+	<stdio.h>
+
+1518578873 c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\converthtog.h
+
+1518578873 c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\htrsf.h
+
+1518578873 source:c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\htrsf.c
+	"Htrsf.h"
+	<stdlib.h>
+	<stdio.h>
+
+1518578874 source:c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\readouth.c
+	<stdio.h>
+	<stdlib.h>
+	"ReadOutH.h"
+
+1518578874 c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\readouth.h
+	<stdio.h>
+
+1519280403 source:c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\awgn_spa\main.c
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+	<string.h>
+	<math.h>
+	<time.h>
+	"SPA.h"
+	"ConvertHtoG.h"
+	"ReadOutH.h"
+	"Htrsf.h"
+	"Gaussian.h"
+
+1519183957 c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\spa.h
+
+1518578873 c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\gaussian.h
+	<stdlib.h>
+	<math.h>
+
+1519225209 source:c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\spa.c
+	"SPA.h"
+	<stdlib.h>
+	<math.h>
+

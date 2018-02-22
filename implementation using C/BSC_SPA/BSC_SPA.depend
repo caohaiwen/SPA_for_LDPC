@@ -51,3 +51,33 @@
 	"ReadOutH.h"
 	"Htrsf.h"
 
+1518578873 source:c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\converthtog.c
+	"ConvertHtoG.h"
+	"Htrsf.h"
+	<stdlib.h>
+	<stdio.h>
+
+1518578873 c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\converthtog.h
+
+1518578873 c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\htrsf.h
+
+1518578873 source:c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\htrsf.c
+	"Htrsf.h"
+	<stdlib.h>
+	<stdio.h>
+
+1518578874 source:c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\readouth.c
+	<stdio.h>
+	<stdlib.h>
+	"ReadOutH.h"
+
+1518578874 c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\readouth.h
+	<stdio.h>
+
+1519225209 source:c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\spa.c
+	"SPA.h"
+	<stdlib.h>
+	<math.h>
+
+1519183957 c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\spa.h
+
