@@ -8,15 +8,17 @@
 
 #include <stdlib.h>
 #include <math.h>
+#include <twister.h>
 
-float Gaussian();
+
+double Gaussian();
 
 
-inline float Gaussian()
+inline double Gaussian()
 {
-    float U = 0, V = 0, z = 0;
-    U = rand() / (RAND_MAX + 1.0);
-    V = rand() / (RAND_MAX + 1.0);
+    double U = 0, V = 0, z = 0;
+    U = randomMT() / (Max_RandMT + 1.0);
+    V = randomMT() / (Max_RandMT + 1.0);
     z = sqrt(-2.0 * log(U)) * sin(2.0 * PI * V);
 
     return z;

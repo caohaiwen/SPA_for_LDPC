@@ -10,9 +10,12 @@
 #include "ReadOutH.h"
 #include "Htrsf.h"
 #include "Gaussian.h"
+#include "twister.h"
 
 
-// tanh(17.0) = 0.9999999999999966 (%.16lf) under "double" whose precision is about 15~16 decimal digits.
+
+// tanh(17.5) = 0.999999999999999 (%.15lf) under "double" whose precision is about 15~16 decimal digits.
+// RAND_MAX =32767
 
 int main()
 {
@@ -31,10 +34,10 @@ int main()
     char convergence = 1;
     int total_trial = 0, max_iterations = 100, error_bits = 0, hd = 0;
     time_t t;
-    int E_b = 1;
+    int E_b = 1;    //the input energy per information symbol.---> E_c = R*E_b;
+    unsigned long seed = 0;
 
-
-    fp = fopen("PCMatrix(816.3.174 (N=816,K=408,M=408,R=0.5)).txt", "r");
+    fp = fopen("PCMatrix(96.3.963 (N=96,K=48,M=48,R=0.5)).txt", "r");
 
     if (fp == NULL)
     {
@@ -60,6 +63,7 @@ int main()
     free(H);
 
     R = (double)k / m;
+
     u = (char *)calloc(k, sizeof(char));
     x_s = (char *)calloc(m, sizeof(char));
     y_r = (double *)calloc(m, sizeof(double));
@@ -70,7 +74,7 @@ int main()
     num = 0;
     decoded_x = (char *)calloc(m, sizeof(char));
 
-    WBER = fopen("WBER under AWGN Channel(N = 816).txt", "w");
+    WBER = fopen("WBER under AWGN Channel(N = 96).txt", "w");
 
     if (WBER == NULL)
     {
@@ -78,18 +82,23 @@ int main()
         return 0;
     }
 
+    seed =(unsigned) time(&t);
+    if (seed % 2==0)
+        seed ++;
+
+
     for (i = 0; i < 20; i++)
     {
         SNR_b = i*0.4;
         failure = 0;
         error_bits = 0;
         num ++;
-        srand((unsigned) time(&t));
-
+        seedMT(seed);
         for (trial = 0; trial < total_trial; trial++)
         {
+
             for (j = 0; j < k; j++) //randomly generating information bits
-                *(u + j) = rand() % 2;
+                *(u + j) = randomMT() % 2;
 
             for (j = 0; j < m; j++) // encoding----->u*G & distorted by AWGN Channel
             {
@@ -97,6 +106,8 @@ int main()
                 for (l = 0; l < k; l++)
                     sum += ((*(u + l)) * (*(G + (l*m + j))));
                 *(x_s + j) = sum % 2;
+
+            /* N0 = 2*sigma^2, SNR_b = E_b / N0. */
                 *(x_ss + j) = sqrt(R * E_b) * (-2 * (*(x_s + j)) + 1); //BPSK Modulation
 
                 noise_var = E_b / (2.0 * pow(10, (SNR_b / 10.0)));
@@ -104,6 +115,7 @@ int main()
 
                 *(y_r + j) = (*(x_ss + j)) + noise;
                 *(cm_int + j) = 4.0 * ((sqrt(R*E_b)) / (2.0*noise_var)) * (*(y_r + j)) ;
+
             }
 
             convergence = SPA(cm_int, n, m, row_w, col_w, variable, check, max_iterations, &decoded_x);
@@ -114,9 +126,8 @@ int main()
                 failure ++;
                 hd = 0;
                 for (j = 0; j < m; j++)
-                    hd += (*(x_s + j));
+                    hd += *(x_s + j);
                 error_bits += hd;
-
             }
             else
             {

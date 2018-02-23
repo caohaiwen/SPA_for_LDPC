@@ -12,6 +12,12 @@ input : cm_int: the intrinsic information from the channel model;
 output : whether it can convergent to a codeword within the max_iterations.
 */
 
+
+/*
+    int abs(int i) ------> input: integer; output: integer
+    double fabs(double x) ------> input float ; output: float
+*/
+
 char SPA(double *cm_int, int n, int m, int row_w, int col_w, int *variable, int *check, int max_iterations, char **decoded_x)
 {
     double *llr_rl = (double *)calloc(n*m, sizeof(double)) ;
@@ -20,13 +26,14 @@ char SPA(double *cm_int, int n, int m, int row_w, int col_w, int *variable, int 
     double *beliefs = (double *)calloc(m, sizeof(double)) ;
     char flag = 1;
     int its = 0, col = 0, row = 0, i = 0,checkN = 0, variableN = 0, t = 0, next_checkN = 0, next_variableN = 0, sum = 0;
-    double tanhVaule = 0, value = 0;
+    double tanhVaule = 1, value = 0;
 
     for (its = 0; its < max_iterations; its++)
     {
         flag  = 1;
+
     /* messages pass from left(variable nodes) to right(check nodes) */
-        for (col = 0; col < m; col++)   //enumerating the variables one by one
+        for (col = 0; col < m; col++)            //enumerating the variables one by one
             for (i = 0; i < degree_variable; i++)
             {
                 checkN = *(variable + (col*degree_variable + i)) - 1;    //the i-th check node of the col-th variable node
@@ -52,28 +59,33 @@ char SPA(double *cm_int, int n, int m, int row_w, int col_w, int *variable, int 
             for (i = 0; i < degree_check; i++)
             {
                 variableN = *(check + (row*degree_check + i)) - 1;
+                if (variableN == -1)
+                    continue;
+
             /* compute the message from the check node row to its i-th variable node. */
-                tanhVaule = 1;
+                tanhVaule = 1.0;
                 for (t = i+1; t < i + degree_check; t++)
                 {
                     next_variableN = *(check + (row*degree_check + t % degree_check)) - 1;
-                    value = *(llr_lr + (row*m + next_variableN)) / 2 ;
-                    if (abs(value) < 17.0)               //otherwise, tanh(tanhVaule) = +1/-1
+                    if (next_variableN == -1)
+                        continue;
+
+                    value = *(llr_lr + (row*m + next_variableN)) / 2.0 ;
+
+                    if (fabs(value) < 17.5)               //otherwise, tanh(tanhVaule) = +1/-1
                         tanhVaule *= tanh(value);
-                    else if (value < -17.0)
+                    else if (value < -17.5)
                         tanhVaule = -tanhVaule;
                 }
 
-                if (abs(tanhVaule - 1.0) <= 1e-10)
-                    value = 17.0;
-                else if (abs(tanhVaule - (-1.0)) <= 1e-10)
-                    value = -17.0;
+                if (fabs(tanhVaule - 1.0) <= 1e-15)
+                    value = 17.5;
+                else if (fabs(tanhVaule - (-1.0)) <= 1e-15)
+                    value = -17.5;
                 else
                     value = atanh(tanhVaule);
-
                 *(llr_rl + (row*m +variableN)) = 2 * value;
             }
-
     /* compute the current beliefs in each variable node */
         for (col = 0; col < m; col++)
         {
@@ -81,11 +93,12 @@ char SPA(double *cm_int, int n, int m, int row_w, int col_w, int *variable, int 
             for (i = 0; i < degree_variable; i++)
             {
                 checkN = *(variable + (col*degree_variable + i)) - 1;
+                if (checkN == -1)
+                    continue;
                 *(beliefs + col) += *(llr_rl + (checkN*m + col));
             }
         }
 
-//printf("SPA----------4\n");
         for (col = 0; col < m ; col++)
             if ( *(beliefs + col) >= 0)
                 *(*decoded_x + col) = 0;
@@ -101,12 +114,14 @@ char SPA(double *cm_int, int n, int m, int row_w, int col_w, int *variable, int 
                 variableN = *(check + (row*degree_check + i)) - 1;
                 sum += *(*decoded_x + variableN);
             }
+
             if (sum % 2 == 1)
             {
                 flag = 0;
                 break;
             }
         }
+
         if (flag==1)
         {
             free(llr_rl);
@@ -115,7 +130,6 @@ char SPA(double *cm_int, int n, int m, int row_w, int col_w, int *variable, int 
             return 1;
         }
     }
-
     free(llr_rl);
     free(llr_lr);
     free(beliefs);
