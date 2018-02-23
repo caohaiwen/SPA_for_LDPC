@@ -37,7 +37,7 @@ int main()
     int E_b = 1;    //the input energy per information symbol.---> E_c = R*E_b;
     unsigned long seed = 0;
 
-    fp = fopen("PCMatrix(96.3.963 (N=96,K=48,M=48,R=0.5)).txt", "r");
+    fp = fopen("PCMatrix(N=204,K=102,M=102,R=0.5).txt", "r");
 
     if (fp == NULL)
     {
@@ -74,7 +74,7 @@ int main()
     num = 0;
     decoded_x = (char *)calloc(m, sizeof(char));
 
-    WBER = fopen("WBER under AWGN Channel(N = 96).txt", "w");
+    WBER = fopen("WBER under AWGN Channel(N = 204).txt", "w");
 
     if (WBER == NULL)
     {

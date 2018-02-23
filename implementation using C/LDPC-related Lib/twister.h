@@ -68,7 +68,7 @@ typedef unsigned long uint32;
 #define loBits(u)      ((u) & 0x7FFFFFFFU)   // mask     the highest   bit of u
 #define mixBits(u, v)  (hiBit(u)|loBits(v))  // move hi bit of u to hi bit of v
 
-#define Max_RandMT pow(2, 32) - 1
+#define Max_RandMT 0xFFFFFFFF
 
 static uint32   state[N+1];     // state vector + 1 extra to not violate ANSI C
 static uint32   *next;          // next random value is computed from here

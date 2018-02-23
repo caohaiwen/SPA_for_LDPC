@@ -9,6 +9,7 @@
 #include "ConvertHtoG.h"
 #include "ReadOutH.h"
 #include "Htrsf.h"
+#include "twister.h"
 
 int main()
 {
@@ -27,8 +28,9 @@ int main()
     char convergence = 1;
     int total_trial = 0, max_iterations = 100, error_bits = 0, hd = 0;
     time_t t;
+    unsigned long seed;
 
-    fp = fopen("PCMatrix(816.3.174 (N=816,K=408,M=408,R=0.5)).txt", "r");
+    fp = fopen("PCMatrix(N=204,K=102,M=102,R=0.5).txt", "r");
 
     if (fp == NULL)
     {
@@ -59,12 +61,12 @@ int main()
     y_r = (char *)calloc(m, sizeof(char));
     cm_int = (double *)calloc(m, sizeof(double));
 
-    total_trial = 10000;
+    total_trial = 100000;
     num = 0;
 
     decoded_x = (char *)calloc(m, sizeof(char));
 
-    WBER = fopen("WBER under BSC(N=816).txt", "w");
+    WBER = fopen("WBER under BSC(N=204).txt", "w");
 
     if (WBER == NULL)
     {
@@ -72,24 +74,27 @@ int main()
         return 0;
     }
 
+    seed = (unsigned) time(&t);
+    seed += ((seed+1) % 2 ); // make sure that seed is odd
+
     for (i = 1; i <= 25; i++)
     {
         cross_prob = i*0.02;
         failure = 0;
         error_bits = 0;
         num ++;
-        srand((unsigned) time(&t));
+        seedMT(seed);
 
         for (trial = 0; trial < total_trial; trial++)
         {
 
             for (j = 0; j < k; j++) //randomly generating information bits
-                *(u + j) = rand() % 2;
+                *(u + j) = randomMT() % 2;
 
             for (j = 0; j < m; j++) // encoding----->u*G & distorted by bsc
             {
                 sum = 0;
-                p = ((double)(rand())) / RAND_MAX;
+                p = ((double)randomMT()) / Max_RandMT;
                 for (l = 0; l < k; l++)
                     sum += ((*(u + l)) * (*(G + (l*m + j))));
                 *(x_s + j) = sum % 2;
