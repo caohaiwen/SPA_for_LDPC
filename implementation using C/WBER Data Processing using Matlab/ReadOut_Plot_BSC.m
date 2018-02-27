@@ -2,7 +2,7 @@
 
 clc;
 clear;
-file = fopen("./PCMatrix(96.3.963 (N=96,K=48,M=48,R=0.5))/WBER under BSC.txt", 'r');
+file = fopen("../Bit Error Rate&Word Error Rate/PCMatrix(96.3.963 (N=96,K=48,M=48,R=0.5))/WBER under BSC(N=96).txt", 'r');
 num_line = 0;
 while ~feof(file)
     num_line = num_line + 1;
@@ -21,7 +21,7 @@ fclose(file);
 
 len = length(cross_prob);
 
-file = fopen("./PCMatrix(N=204,K=102,M=102,R=0.5)/WBER under BSC.txt", 'r');
+file = fopen("../Bit Error Rate&Word Error Rate/PCMatrix(204.33.486 N=204,K=102,M=102,R=0.5)/WBER under BSC(N=204).txt", 'r');
 num_line = 0;
 while ~feof(file)
     num_line = num_line + 1;
@@ -40,7 +40,7 @@ bit_err(2, :) = bit_err(2, :) + [zeros(1, num_line /2), ones(1, len - num_line /
 
 fclose(file);
 
-file = fopen("./PCMatrix(816.3.174 (N=816,K=408,M=408,R=0.5))/WBER under BSC.txt", 'r');
+file = fopen("../Bit Error Rate&Word Error Rate/PCMatrix(816.3.174 (N=816,K=408,M=408,R=0.5))/WBER under BSC(N=816).txt", 'r');
 num_line = 0;
 while ~feof(file)
     num_line = num_line + 1;

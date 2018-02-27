@@ -2,7 +2,7 @@
 
 clc;
 clear;
-file = fopen("./PCMatrix(96.3.963 (N=96,K=48,M=48,R=0.5))/WBER under AWGN Channel.txt", 'r');
+file = fopen("../Bit Error Rate&Word Error Rate/PCMatrix(96.3.963 (N=96,K=48,M=48,R=0.5))/WBER under AWGN Channel(N = 96).txt", 'r');
 num_line = 0;
 num_row = 0;
 num_col = 0;
@@ -21,7 +21,7 @@ end
 
 fclose(file);
 
-file = fopen("./PCMatrix(N=204,K=102,M=102,R=0.5)/WBER under AWGN Channel.txt", 'r');
+file = fopen("../Bit Error Rate&Word Error Rate/PCMatrix(204.33.486 N=204,K=102,M=102,R=0.5)/WBER under AWGN Channel(N = 204).txt", 'r');
 num_line = 0;
 num_row = 0;
 num_col = 0;
@@ -40,7 +40,7 @@ end
 
 fclose(file);
 
-file = fopen("./PCMatrix(816.3.174 (N=816,K=408,M=408,R=0.5))/WBER under AWGN Channel.txt", 'r');
+file = fopen("../Bit Error Rate&Word Error Rate/PCMatrix(816.3.174 (N=816,K=408,M=408,R=0.5))/WBER under AWGN Channel(N = 816).txt", 'r');
 num_line = 0;
 num_row = 0;
 num_col = 0;
