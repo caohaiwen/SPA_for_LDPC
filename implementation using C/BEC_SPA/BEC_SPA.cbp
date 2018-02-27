@@ -49,6 +49,7 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../LDPC-related Lib/SPA_BEC.h" />
+		<Unit filename="../LDPC-related Lib/twister.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

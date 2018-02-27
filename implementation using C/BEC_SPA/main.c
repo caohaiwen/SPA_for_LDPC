@@ -9,6 +9,7 @@
 #include "ConvertHtoG.h"
 #include "ReadOutH.h"
 #include "Htrsf.h"
+#include "twister.h"
 
 int main(int argc, char *argv[])  //using windows command to pass parameters about input file name and output file name
 {
@@ -18,7 +19,7 @@ int main(int argc, char *argv[])  //using windows command to pass parameters abo
     int i = 0, j = 0 , l = 0;
     char *H = NULL, *G = NULL;
     int k = 0;
-    float erasure_prob = 0, p = 0;
+    double erasure_prob = 0, p = 0;
     char *u = NULL;
     char *x_s = NULL, *y_r = NULL;
     int sum = 0, num = 0, failure = 0, trial = 0;
@@ -26,6 +27,7 @@ int main(int argc, char *argv[])  //using windows command to pass parameters abo
     char convergence = 1;
     int total_trial = 0, max_iterations = 100, error_bits = 0, hd = 0;
     time_t t;
+    unsigned long seed;
 
     fp = fopen(argv[1], "r");
 
@@ -50,6 +52,8 @@ int main(int argc, char *argv[])  //using windows command to pass parameters abo
     Htrsf(&H, n, m);
     ConvertHtoG(H, n, m, &G, &k);
 
+    free(H);
+
     u = (char *)calloc(k, sizeof(char));
     x_s = (char *)calloc(m, sizeof(char));
     y_r = (char *)calloc(m, sizeof(char));
@@ -67,27 +71,29 @@ int main(int argc, char *argv[])  //using windows command to pass parameters abo
             return 0;
     }
 
-    for (num = 6; num <= 6; num++)
+    seed = (unsigned) time(&t);
+    seed += ((seed+1) % 2 ); // make sure that seed is odd
+
+    for (num = 3; num <= 7; num++)
     {
-        max_iterations = num * 30;
-        for (i = 1; i <= 30; i++)
+        max_iterations = (int)pow(2, num);
+        for (i = 1; i <= 26; i++)
         {
             erasure_prob = i * 0.02;
             failure = 0;
             error_bits = 0;
-            srand((unsigned) time(&t));
+            seedMT(seed);
 
             for (trial = 0; trial < total_trial; trial++)
             {
 
                 for (j = 0; j < k; j++) //randomly generating information bits
-                    *(u + j) = rand() % 2;
+                    *(u + j) =  randomMT()  % 2;
 
                 for (j = 0; j < m; j++) // encoding----->u*G & distorted by bsc
                 {
                     sum = 0;
-                    p = ((float)(rand())) / RAND_MAX;
-
+                    p = ((double)( randomMT() )) / Max_RandMT;
                     for (l = 0; l < k; l++)
                         sum += ((*(u + l)) * (*(G + (l*m + j))));
                     *(x_s + j) = sum % 2;
@@ -113,41 +119,7 @@ int main(int argc, char *argv[])  //using windows command to pass parameters abo
                     hd = 0;
                     for (j = 0; j < m; j++)
                         if ((*(x_s + j)) != (*(decoded_x + j)))
-                        {
                             hd++;
-                            printf("position=====%d\n", j+1);
-                        }
-
-                    if (hd != 0)
-                    {
-                        for (j = 0; j < m; j++)
-                        {
-                            printf("%d ",(*(x_s + j)));
-                        }
-                        printf("\n");
-
-                        getchar();
-
-                        for (j = 0; j < m; j++)
-                        {
-                            printf("%d ",(*(y_r + j)));
-                        }
-                        printf("\n");
-
-                        getchar();
-
-                        for (j = 0; j < m; j++)
-                        {
-                            printf("%d ",(*(decoded_x + j)));
-                        }
-
-                        printf("\n");
-
-                        getchar();
-
-                        printf("hd--------%d, amazing-------erasure_prob == %f\n", hd, erasure_prob);
-                        getchar();
-                    }
 
                     if (hd != 0)
                     {
@@ -157,10 +129,8 @@ int main(int argc, char *argv[])  //using windows command to pass parameters abo
                 }
 
             }
-            fprintf(WBER, "max_iterations = %d, erasure_prob == %f, word error rate == %f\n",  max_iterations, erasure_prob, (float)failure / total_trial);
-            fprintf(WBER, "max_iterations = %d, erasure_prob == %f, bit error rate == %f\n",  max_iterations, erasure_prob, (float)error_bits / (total_trial*m));
-            if (abs(failure - total_trial) <= total_trial * 0.001)
-                break;
+            fprintf(WBER, "max_iterations = %d, erasure_prob == %lf, word error rate == %lf\n",  max_iterations, erasure_prob, (double)failure / total_trial);
+            fprintf(WBER, "max_iterations = %d, erasure_prob == %lf, bit error rate == %lf\n",  max_iterations, erasure_prob, (double)error_bits / (total_trial*m));
         }
     }
     fclose(WBER);
@@ -171,7 +141,6 @@ int main(int argc, char *argv[])  //using windows command to pass parameters abo
     free(x_s);
     free(y_r);
     free(G);
-    free(H);
     free(variable);
     free(check);
 

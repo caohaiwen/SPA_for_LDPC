@@ -71,3 +71,51 @@
 
 1518578875 c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\spa_bec.h
 
+1519703309 source:c:\users\administrator\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\converthtog.c
+	"ConvertHtoG.h"
+	"Htrsf.h"
+	<stdlib.h>
+	<stdio.h>
+
+1519703309 c:\users\administrator\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\converthtog.h
+
+1519703309 c:\users\administrator\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\htrsf.h
+
+1519703309 source:c:\users\administrator\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\htrsf.c
+	"Htrsf.h"
+	<stdlib.h>
+	<stdio.h>
+
+1519703309 source:c:\users\administrator\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\readouth.c
+	<stdio.h>
+	<stdlib.h>
+	"ReadOutH.h"
+
+1519703309 c:\users\administrator\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\readouth.h
+	<stdio.h>
+
+1519703309 source:c:\users\administrator\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\spa_bec.c
+	"SPA_BEC.h"
+	<stdlib.h>
+	<stdio.h>
+
+1519703309 c:\users\administrator\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\spa_bec.h
+
+1519703979 source:c:\users\administrator\documents\git_repositories\spa_for_ldpc\implementation using c\bec_spa\main.c
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+	<string.h>
+	<math.h>
+	<time.h>
+	"SPA_BEC.h"
+	"ConvertHtoG.h"
+	"ReadOutH.h"
+	"Htrsf.h"
+	"twister.h"
+
+1519703309 c:\users\administrator\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\twister.h
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+

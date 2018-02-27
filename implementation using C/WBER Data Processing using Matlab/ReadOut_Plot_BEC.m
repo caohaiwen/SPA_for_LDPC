@@ -7,9 +7,7 @@ num_line = 0;
 num = 0;
 its = 0;
 prv_its = 0;
-word_err = ones(6, 30);
-bit_err = ones(6, 30) / 2;
-erasure_prob = 0.02 : 0.02 :0.60;
+erasure_prob = 0.02 : 0.02 :0.52;
 
 current = 0;
 
@@ -38,7 +36,7 @@ end
 
 fclose(file);
 
-marks = {'-rp', '--bo', '--k^', '-gd', ':mh', '-.k+'};
+marks = {'-rp', '--bo', '--k^', '-gd', ':mh'};
 subplot(2,1,1);
 
 
@@ -46,7 +44,7 @@ set(gca, 'YScale', 'log');
 xticks(erasure_prob);
 
 hold on
-for i = 1 : 6
+for i = 1 : 5
     semilogy(erasure_prob, word_err(i,:), marks{i});
 end
 
@@ -55,8 +53,7 @@ xlabel('Erasure Probabilty');
 ylabel('Word Error Rate');
 
 
-legend('max_iterations = 30', 'max_iterations = 60', 'max_iterations = 90' , 'max_iterations = 120' , 'max_iterations = 150', 'max_iterations = 180');
-
+legend('max_iterations = 8', 'max_iterations = 16', 'max_iterations = 32' , 'max_iterations = 64' , 'max_iterations = 128');
 hold off;
 
 subplot(2,1,2);
@@ -66,7 +63,7 @@ xticks(erasure_prob);
 
 hold on
 
-for i = 1 : 6
+for i = 1 : 5
     semilogy(erasure_prob, bit_err(i,:), marks{i});
 end
 
@@ -75,7 +72,7 @@ xlabel('Erasure Probabilty');
 ylabel('Bit Error Rate');
 
 
-legend('max_iterations = 30', 'max_iterations = 60', 'max_iterations = 90' , 'max_iterations = 120' , 'max_iterations = 150', 'max_iterations = 180');
+legend('max_iterations = 8', 'max_iterations = 16', 'max_iterations = 32' , 'max_iterations = 64' , 'max_iterations = 128');
 
 hold off;
 
