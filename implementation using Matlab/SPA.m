@@ -27,8 +27,8 @@ for its = 1 : max_iterations
     for k = 1 : row
        variables = variable(k, :); % all the check nodes connected with the k-th variable 
        for j = 1 : degree_variable % compute the message from variable node k to its j_th check node
-           llr_lr(k, variables(j)) = cm_int(k) + llr_rl(k, variables(mod(j+1-1, degree_variable)+1));
-           for t = j+2 : j+degree_variable-1
+           llr_lr(k, variables(j)) = cm_int(k) ;
+           for t = j+1 : j+degree_variable-1
                llr_lr(k, variables(j)) = llr_lr(k, variables(j)) + llr_rl(k, variables(mod(t-1, degree_variable)+1));
            end
        end 
@@ -38,11 +38,27 @@ for its = 1 : max_iterations
     for j = 1 : col
         checks = check(j, :);
         for k = 1 : degree_check % compute the message from check node j to its k_th variable node
-            llr_rl(checks(k), j) = tanh(llr_lr(checks(mod(k+1-1, degree_check)+1), j)/2);
-            for t = k+2 : k+degree_check-1
-                llr_rl(checks(k), j) = llr_rl(checks(k), j) * tanh(llr_lr(checks(mod(t-1, degree_check)+1), j)/2);
+            tanhVaule = 1.0;
+            for t = k+1 : k+degree_check-1
+                 value = llr_lr(checks(mod(t-1, degree_check)+1), j) / 2.0 ;
+                    if (abs(value) < 17.5)               %otherwise, tanh(tanhVaule) = +1/-1
+                        tanhVaule = tanhVaule * tanh(value);
+                    else if (value < -17.5)
+                        tanhVaule = -tanhVaule;
+                        end
+                    end
             end
-            llr_rl(checks(k), j ) = 2*atanh(llr_rl(checks(k), j));
+            
+            if (abs(tanhVaule - 1.0) <= 1e-15)
+                    value = 17.5;
+                else if (abs(tanhVaule - (-1.0)) <= 1e-15)
+                    value = -17.5;
+                else
+                    value = atanh(tanhVaule);
+                    end
+            end
+            llr_rl(checks(k), j ) = 2 * value;
+                   
         end     
     end
     

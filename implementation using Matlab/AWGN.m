@@ -5,7 +5,7 @@
 clc;
 clear;
 %file = fopen("PCMatrix(N=204,K=102,M=102,R=0.5).txt", 'r');
-file = fopen("PCMatrix(96.3.963 (N=96,K=48,M=48,R=0.5)).txt", 'r');
+file = fopen(".\Data (i.e. LDPC Matrices)\PCMatrix(96.3.963 (N=96,K=48,M=48,R=0.5)).txt", 'r');
 num_line = 0;
 num_row = 0;
 num_col = 0;
@@ -119,12 +119,12 @@ H_t = H';
 
 
 num = 0;
-total_trial = 1000000;
+total_trial = 100000;
 E_b = 1;
 R = (n-m)/n ; % designed code rate
 
 
-for SNR_b = 0: 0.5 : 10   % SNR per information bit,i.e., SNR_b (dB)
+for SNR_b = 0: 0.5 : 6   % SNR per information bit,i.e., SNR_b (dB)
     failure = 0;
     num = num + 1;
     for trial = 1 : total_trial
@@ -152,7 +152,7 @@ for SNR_b = 0: 0.5 : 10   % SNR per information bit,i.e., SNR_b (dB)
 end
 
 
-semilogy(0:0.5:10, worderr, 'rp');
+semilogy(0:0.5:6, worderr, 'rp');
 
 hold on;
 
