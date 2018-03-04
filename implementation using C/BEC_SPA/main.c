@@ -28,6 +28,8 @@ int main(int argc, char *argv[])  //using windows command to pass parameters abo
     int total_trial = 0, max_iterations = 100, error_bits = 0, hd = 0;
     time_t t;
     unsigned long seed;
+    int edge = 0;
+    int *P = NULL;
 
     fp = fopen(argv[1], "r");
 
@@ -47,6 +49,8 @@ int main(int argc, char *argv[])  //using windows command to pass parameters abo
             if ((*(check + i*row_w + j)) == 0)
                 continue;
             *(H + i*m + (*(check + i*row_w + j)) - 1) = 1;
+            *(P + i*m + (*(check + i*row_w + j)) - 1) = edge;
+            edge ++;
         }
 
     Htrsf(&H, n, m);
@@ -104,7 +108,7 @@ int main(int argc, char *argv[])  //using windows command to pass parameters abo
                         *(y_r + j) = (*(x_s + j));
                 }
 
-                convergence = SPA_BEC(y_r, n, m, row_w, col_w, variable, check, max_iterations, &decoded_x);
+                convergence = SPA_BEC(y_r, n, m, row_w, col_w, variable, check, max_iterations, &decoded_x, P);
     //if the algorithm doesn't convergent to a codeword, then we assume that it's all-zero codewords;
                 if (convergence == 0)
                 {
@@ -136,6 +140,7 @@ int main(int argc, char *argv[])  //using windows command to pass parameters abo
     fclose(WBER);
     fclose(WBER);
 
+    free(P);
     free(u);
     free(decoded_x);
     free(x_s);
