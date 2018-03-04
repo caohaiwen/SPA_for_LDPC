@@ -32,12 +32,14 @@ int main()
     int sum = 0, num = 0, failure = 0, trial = 0;
     char *decoded_x = NULL;
     char convergence = 1;
+    int *P = NULL;
     int total_trial = 0, max_iterations = 100, error_bits = 0, hd = 0;
     time_t t;
     int E_b = 1;    //the input energy per information symbol.---> E_c = R*E_b;
     unsigned long seed = 0;
+    int edge = 0;
 
-    fp = fopen("PCMatrix(N=204,K=102,M=102,R=0.5).txt", "r");
+    fp = fopen("PCMatrix(96.3.963 (N=96,K=48,M=48,R=0.5)).txt", "r");
 
     if (fp == NULL)
     {
@@ -48,12 +50,16 @@ int main()
     fclose(fp);
 
     H = (char *)calloc(n*m, sizeof(char));
-
+    P = (int *)calloc(n*m, sizeof(int));
 
     for (i = 0; i < n; i++)
         for (j = 0; j < row_w; j++)
         {
+            if ((*(check + i*row_w + j)) == 0)
+                continue;
             *(H + i*m + (*(check + i*row_w + j)) - 1) = 1;
+            *(P + i*m + (*(check + i*row_w + j)) - 1) = edge;
+            edge++;
         }
 
     Htrsf(&H, n, m);
@@ -74,7 +80,7 @@ int main()
     num = 0;
     decoded_x = (char *)calloc(m, sizeof(char));
 
-    WBER = fopen("WBER under AWGN Channel(N = 204).txt", "w");
+    WBER = fopen("WBER under AWGN Channel(N = 96).txt", "w");
 
     if (WBER == NULL)
     {
@@ -118,7 +124,7 @@ int main()
 
             }
 
-            convergence = SPA(cm_int, n, m, row_w, col_w, variable, check, max_iterations, &decoded_x);
+            convergence = SPA(cm_int, n, m, row_w, col_w, variable, check, max_iterations, &decoded_x, P);
 
 //if the algorithm doesn't convergent to a codeword, then we assume that it's all-zero codewords;
             if (convergence == 0)
@@ -149,6 +155,7 @@ int main()
 
     fclose(WBER);
 
+    free(P);
     free(cm_int);
     free(u);
     free(decoded_x);

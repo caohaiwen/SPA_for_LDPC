@@ -2,12 +2,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-char SPA_BEC(char *y_r, int n, int m, int row_w, int col_w, int *variable, int *check, int max_iterations, char **decoded_x)
+char SPA_BEC(char *y_r, int n, int m, int row_w, int col_w, int *variable, int *check, int max_iterations, char **decoded_x, int *P)
 {
-    char *llr_rl = (char *)calloc(n*m, sizeof(char)) ;
-    char *llr_lr = (char *)calloc(n*m, sizeof(char)) ;
+    char *llr_rl = (char *)calloc(n*row_w, sizeof(char)) ;
+    char *llr_lr = (char *)calloc(n*col_w, sizeof(char)) ;
     int degree_variable = col_w, degree_check = row_w;
     int its = 0, col = 0, row = 0, i = 0,checkN = 0, variableN = 0, t = 0, next_checkN = 0, next_variableN = 0,  cnt = 0, prv_cnt = 0;
+    int edge = 0, next_edge = 0;
 
 /* iteration0 : from left to right is just the message from the channel. */
     for (col = 0; col < m; col++)
@@ -16,7 +17,8 @@ char SPA_BEC(char *y_r, int n, int m, int row_w, int col_w, int *variable, int *
             checkN = *(variable + (col*degree_variable + i)) - 1;
             if (checkN == -1)
                 continue;
-            *(llr_lr + (m*checkN + col)) = *(y_r + col);
+            edge = *(P + (m*checkN + col));
+            *(llr_lr + edge) = *(y_r + col);
             *((*decoded_x) + col) = *(y_r + col);
         }
 
@@ -32,25 +34,27 @@ char SPA_BEC(char *y_r, int n, int m, int row_w, int col_w, int *variable, int *
                 variableN = *(check + (row*degree_check + i)) - 1;
                 if (variableN == -1)
                     continue;
+                edge = *(P + (row*m +variableN));
             /*
                 the outgoing message from the check node is an erasure if there exists any erasure from the incoming
                 message, otherwise, all the incoming messages are not erased and then mod (all the sum of incoming messages)
             */
-                *(llr_rl + (row*m +variableN)) = 0;
+                *(llr_rl + edge) = 0;
                 for (t = i+1; t < i + degree_check; t++)
                 {
                     next_variableN = *(check + (row*degree_check + t % degree_check)) - 1;
                     if (next_variableN == -1)
                         continue;
+                    next_edge = *(P + (row*m + next_variableN));
 
-                    if (*(llr_lr + (row*m + next_variableN)) != 2)
+                    if (*(llr_lr + next_edge) != 2)
                     {
-                        *(llr_rl + (row*m +variableN)) += (*(llr_lr + (row*m + next_variableN)));
-                        *(llr_rl + (row*m +variableN)) %= 2;
+                        *(llr_rl + edge) += (*(llr_lr + next_edge));
+                        *(llr_rl + edge) %= 2;
                     }
                     else
                     {
-                        *(llr_rl + (row*m +variableN)) = 2;
+                        *(llr_rl + edge) = 2;
                         break;
                     }
 
@@ -64,9 +68,10 @@ char SPA_BEC(char *y_r, int n, int m, int row_w, int col_w, int *variable, int *
                 checkN = *(variable + (col*degree_variable + i)) - 1;    //the i-th check node of the col-th variable node
                 if (checkN == -1)
                     continue;
+                edge = *(P + (m*checkN + col));
 
                 if (*((*decoded_x) + col) != 2)
-                    *(llr_lr + (m*checkN + col)) = *((*decoded_x) + col) ;
+                    *(llr_lr + edge) = *((*decoded_x) + col) ;
                 else
                 {
                     /*
@@ -77,11 +82,12 @@ char SPA_BEC(char *y_r, int n, int m, int row_w, int col_w, int *variable, int *
                         next_checkN = *(variable + (col*degree_variable + t % degree_variable)) - 1;
                         if (next_checkN == -1)
                             continue;
+                        next_edge = *(P + (m*next_checkN + col));
 
-                        if (*(llr_rl + (m*next_checkN + col)) != 2)
+                        if (*(llr_rl + next_edge) != 2)
                         {
-                            *(llr_lr + (m*checkN + col)) = *(llr_rl + (m*next_checkN + col));
-                            *((*decoded_x) + col) = *(llr_rl + (m*next_checkN + col));
+                            *(llr_lr + edge) = *(llr_rl + next_edge);
+                            *((*decoded_x) + col) = *(llr_rl + next_edge);
                             break;
                         }
                     }

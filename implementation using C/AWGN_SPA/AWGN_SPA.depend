@@ -69,7 +69,7 @@
 1518578874 c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\readouth.h
 	<stdio.h>
 
-1519382500 source:c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\awgn_spa\main.c
+1520162433 source:c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\awgn_spa\main.c
 	<stdio.h>
 	<stdlib.h>
 	<ctype.h>
@@ -83,14 +83,14 @@
 	"Gaussian.h"
 	"twister.h"
 
-1519183957 c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\spa.h
+1520095056 c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\spa.h
 
 1519398520 c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\gaussian.h
 	<stdlib.h>
 	<math.h>
 	<twister.h>
 
-1519382194 source:c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\spa.c
+1520162632 source:c:\users\hiter\documents\git_repositories\spa_for_ldpc\implementation using c\ldpc-related lib\spa.c
 	"SPA.h"
 	<stdlib.h>
 	<math.h>

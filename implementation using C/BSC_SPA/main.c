@@ -29,6 +29,8 @@ int main()
     int total_trial = 0, max_iterations = 100, error_bits = 0, hd = 0;
     time_t t;
     unsigned long seed;
+    int *P = NULL;
+    int edge = 0;
 
     fp = fopen("PCMatrix(N=204,K=102,M=102,R=0.5).txt", "r");
 
@@ -42,12 +44,16 @@ int main()
     fclose(fp);
 
     H = (char *)calloc(n*m, sizeof(char));
+    P = (int *)calloc(n*m, sizeof(int));
+
     for (i = 0; i < n; i++)
         for (j = 0; j < row_w; j++)
         {
             if ((*(check + i*row_w + j)) == 0)
                 continue;
             *(H + i*m + (*(check + i*row_w + j)) - 1) = 1;
+            *(P + i*m + (*(check + i*row_w + j)) - 1) = edge;
+            edge++;
         }
 
     Htrsf(&H, n, m);
@@ -110,7 +116,7 @@ int main()
                     *(cm_int + j) = log((1 - cross_prob) / cross_prob);
             }
 
-            convergence = SPA(cm_int, n, m, row_w, col_w, variable, check, max_iterations, &decoded_x);
+            convergence = SPA(cm_int, n, m, row_w, col_w, variable, check, max_iterations, &decoded_x, P);
 
 //if the algorithm doesn't convergent to a codeword, then we assume that it's all-zero codewords;
             if (convergence == 0)
@@ -141,6 +147,7 @@ int main()
     }
     fclose(WBER);
 
+    free(P);
     free(cm_int);
     free(u);
     free(decoded_x);
