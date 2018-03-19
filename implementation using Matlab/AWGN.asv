@@ -39,15 +39,11 @@ fclose(file);
 % construct the parity-check matrix 
 
 H = zeros(n, m);
-P = zeros(n, m);
-edge = 0;
 
 for i = 1 : n
     for j = 1 : m
         if ismember(j, variable(i,:))
             H(i, j) = 1;
-            edge = edge + 1;
-            P(i, j) = edge;
         end
     end
 end
@@ -86,7 +82,7 @@ for SNR_b = 0: 0.5 : 6   % SNR per information bit,i.e., SNR_b (dB)
             y_rs(i) = x_ss(i) + noise;
             cm_int(i) = 4*((sqrt(R*E_b))/(2*noise_var))*y_rs(i);
         end
-        [decoded_x, convergence] = SPA(cm_int, n, m, row_w, col_w, variable, check, P);
+        [decoded_x, convergence] = SPA(cm_int, n, m, row_w, col_w, variable, check);
         if ~(convergence && isequal(decoded_x, x_s))
             failure = failure + 1;
         end

@@ -1,4 +1,4 @@
-function [decoded_x, convergence] = SPA_BEC(y_r,n, m, row_w, col_w, variable, check, max_iterations)
+function [decoded_x, convergence] = SPA_BEC(y_r,n, m, row_w, col_w, variable, check, max_iterations, P)
 
 % decoded_x: the output of the decoder
 % convergence : whether it can convergent to a codeword within the max_iterations;
@@ -14,8 +14,11 @@ degree_check = col_w;
 
 decoded_x = ones(1, row);
 convergence = false;
-llr_lr = zeros(row, col);
-llr_rl = zeros(row, col);
+llr_lr = zeros(1, row*degree_variable);
+llr_rl = zeros(1, col*degree_check);
+
+edge = 0;
+next_edge = 0;
 cnt = 0; 
 prv_cnt = 0;
 
@@ -26,7 +29,8 @@ for k = 1: row
     variables = variable(k, :);
     for j = 1 : degree_variable
         if (variables(j) ~= 0)
-            llr_lr(k, variables(j)) = codeword(k);
+          edge = P(k, variables(j));
+          llr_lr(edge) = codeword(k);
         end
     end
 end
@@ -42,20 +46,21 @@ for its = 1 : max_iterations
             % exists any erasure from the incoming message, otherwise, all the 
             % incoming messages are not erased and then mod(all the sum of 
             % incoming messages).
-        
-                llr_rl(checks(k), j) = 0;
+                edge = P(checks(k), j);
+                llr_rl(edge) = 0;
                 
                 for t = k+1 : k+degree_check-1
                     
                     if (checks(mod(t-1, degree_check)+1) == 0)
                         continue;
                     end
-                    
-                    if (llr_lr(checks(mod(t-1, degree_check)+1), j) ~= 2)
-                        llr_rl(checks(k), j) = llr_rl(checks(k), j) + llr_lr(checks(mod(t-1, degree_check)+1), j);
-                        llr_rl(checks(k), j) = mod(llr_rl(checks(k), j), 2);
+                    next_edge = P(checks(mod(t-1, degree_check)+1), j);
+
+                    if (llr_lr(next_edge) ~= 2)
+                        llr_rl(edge) = llr_rl(edge) + llr_lr(next_edge);
+                        llr_rl(edge) = mod(llr_rl(edge), 2);
                     else 
-                        llr_rl(checks(k), j) = 2;
+                        llr_rl(edge) = 2;
                         break;
                     end
                     
@@ -73,17 +78,19 @@ for its = 1 : max_iterations
       % message an erasure at first.
       for j = 1 : degree_variable % compute the message from variable node k to its j_th check node
           if (variables(j) ~= 0)
+            edge = P(k, variables(j));
             if (codeword(k) ~= 2)
-              llr_lr(k, variables(j)) = codeword(k);
+              llr_lr(edge) = codeword(k);
             else 
               for t = j+1 : j+degree_variable-1
                 if (variables(mod(t-1, degree_variable)+1) == 0)
                   continue;
                 end
-                
-                if (llr_rl(k, variables(mod(t-1, degree_variable)+1)) ~= 2)
-                  llr_lr(k, variables(j)) = llr_rl(k, variables(mod(t-1, degree_variable)+1));
-                  codeword(k) =  llr_lr(k, variables(j));
+                next_edge = P(k, variables(mod(t-1, degree_variable)+1));
+
+                if (llr_rl(next_edge) ~= 2)
+                  llr_lr(edge) = llr_rl(next_edge);
+                  codeword(k) =  llr_lr(edge);
                   break;
                 end
               end

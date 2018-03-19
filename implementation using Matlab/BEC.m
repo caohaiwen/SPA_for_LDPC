@@ -4,7 +4,7 @@
 % read out LDPC parity-check matrix 
 clc;
 clear;
-file = fopen("PCMatrix(96.3.963 (N=96,K=48,M=48,R=0.5)).txt", 'r');
+file = fopen(".\Data (i.e. LDPC Matrices)\PCMatrix(96.3.963 (N=96,K=48,M=48,R=0.5)).txt", 'r');
 num_line = 0;
 num_row = 0;
 num_col = 0;
@@ -36,11 +36,15 @@ fclose(file);
 % construct the parity-check matrix 
 
 H = zeros(n, m);
+P = zeros(n, m);
+edge = 0;
 
 for i = 1 : n
     for j = 1 : m
         if ismember(j, variable(i,:))
             H(i, j) = 1;
+            edge = edge + 1;
+            P(i, j) = edge;
         end
     end
 end
@@ -73,7 +77,7 @@ for erasure_prob = 0.02 : 0.02 : 0.40
             end
         end
         
-        [decoded_x, convergence] = SPA_BEC(y_r, n, m, row_w, col_w, variable, check, max_iterations);
+        [decoded_x, convergence] = SPA_BEC(y_r, n, m, row_w, col_w, variable, check, max_iterations, P);
         if ~(convergence && isequal(decoded_x, x_s))
             failure = failure + 1;
         end
