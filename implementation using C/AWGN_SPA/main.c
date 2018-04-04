@@ -11,6 +11,7 @@
 #include "Htrsf.h"
 #include "Gaussian.h"
 #include "twister.h"
+#include "sort.h"
 
 
 
@@ -32,7 +33,7 @@ int main()
     int sum = 0, num = 0, failure = 0, trial = 0;
     char *decoded_x = NULL;
     char convergence = 1;
-    int *P = NULL;
+    int *P = NULL;	// enumerating all edges in the parity-check matrix H;
     int total_trial = 0, max_iterations = 100, error_bits = 0, hd = 0;
     time_t t;
     int E_b = 1;    //the input energy per information symbol.---> E_c = R*E_b;
@@ -46,6 +47,7 @@ int main()
         printf("cannot open this file-_-\n");
         return 0;
     }
+    
     ReadOutH(fp, &n, &m, &row_w, &col_w, &variable, &check);
     fclose(fp);
 
